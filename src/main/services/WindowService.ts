@@ -95,8 +95,9 @@ export class WindowService {
 
   private setupContextMenu(mainWindow: BrowserWindow) {
     if (!this.contextMenu) {
-      const locale = locales[configManager.getLanguage()]
-      const { common } = locale.translation
+      const language = configManager.getLanguage()
+      const locale = locales[language] || locales['en-US'] // Usar inglés como fallback si el idioma no existe
+      const common = locale?.translation?.common || { copy: 'Copy', paste: 'Paste', cut: 'Cut' } // Valores predeterminados si no existe translation
 
       this.contextMenu = new Menu()
       this.contextMenu.append(new MenuItem({ label: common.copy, role: 'copy' }))

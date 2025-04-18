@@ -43,8 +43,13 @@ export class TrayService {
 
     this.tray = tray
 
-    const locale = locales[configManager.getLanguage()]
-    const { tray: trayLocale } = locale.translation
+    const language = configManager.getLanguage()
+    const locale = locales[language] || locales['en-US'] // Usar inglés como fallback si el idioma no existe
+    const trayLocale = locale?.translation?.tray || {
+      show_window: 'Show Window',
+      show_mini_window: 'Show Quick Assistant',
+      quit: 'Quit'
+    } // Valores predeterminados si no existe translation
 
     const enableQuickAssistant = configManager.getEnableQuickAssistant()
 
