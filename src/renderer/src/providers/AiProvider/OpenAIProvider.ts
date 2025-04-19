@@ -19,6 +19,7 @@ import {
   filterEmptyMessages,
   filterUserRoleStartMessages
 } from '@renderer/services/MessagesService'
+import { processReqMessages } from '@renderer/services/ModelMessageService'
 import store from '@renderer/store'
 import {
   Assistant,
@@ -45,7 +46,7 @@ import {
 import { CompletionsParams } from '.'
 import BaseProvider from './BaseProvider'
 
-type ReasoningEffort = 'high' | 'medium' | 'low'
+type ReasoningEffort = 'low' | 'medium' | 'high'
 
 export default class OpenAIProvider extends BaseProvider {
   private sdk: OpenAI
@@ -504,7 +505,10 @@ export default class OpenAIProvider extends BaseProvider {
 
       await processToolUses(content, idx)
     }
-    // console.log('reqMessages', reqMessages)
+
+    // console.log('[before] reqMessages', reqMessages)
+    reqMessages = processReqMessages(model, reqMessages)
+    // console.log('[after] reqMessages', reqMessages)
     const stream = await this.sdk.chat.completions
       // @ts-ignore key is not typed
       .create(
