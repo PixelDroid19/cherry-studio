@@ -1,4 +1,6 @@
 import KeyvStorage from '@kangfenmao/keyv-storage'
+import * as Sentry from '@sentry/electron/renderer'
+import { init as reactInit } from '@sentry/react'
 
 import { startAutoSync } from './services/BackupService'
 import { startNutstoreAutoSync } from './services/NutstoreService'
@@ -27,6 +29,17 @@ function initAutoSync() {
       startNutstoreAutoSync()
     }
   }, 2000)
+}
+
+export function initSentry() {
+  Sentry.init(
+    {
+      sendDefaultPii: true,
+      tracesSampleRate: 1.0,
+      integrations: [Sentry.browserTracingIntegration()]
+    },
+    reactInit as any
+  )
 }
 
 initSpinner()
