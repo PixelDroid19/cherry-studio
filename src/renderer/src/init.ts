@@ -1,14 +1,13 @@
 import KeyvStorage from '@kangfenmao/keyv-storage'
-import * as Sentry from '@sentry/electron/renderer'
-import { init as reactInit } from '@sentry/react'
 
 import { startAutoSync } from './services/BackupService'
 import { startNutstoreAutoSync } from './services/NutstoreService'
+import storeSyncService from './services/StoreSyncService'
 import store from './store'
 
 function initSpinner() {
   const spinner = document.getElementById('spinner')
-  if (spinner && window.location.hash !== '#/mini') {
+  if (spinner) {
     spinner.style.display = 'flex'
   }
 }
@@ -31,17 +30,11 @@ function initAutoSync() {
   }, 8000)
 }
 
-export function initSentry() {
-  Sentry.init(
-    {
-      sendDefaultPii: true,
-      tracesSampleRate: 1.0,
-      integrations: [Sentry.browserTracingIntegration()]
-    },
-    reactInit as any
-  )
+function initStoreSync() {
+  storeSyncService.subscribe()
 }
 
 initSpinner()
 initKeyv()
 initAutoSync()
+initStoreSync()

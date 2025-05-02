@@ -3,7 +3,6 @@ import { isLocalAi } from '@renderer/config/env'
 import { useTheme } from '@renderer/context/ThemeProvider'
 import db from '@renderer/databases'
 import i18n from '@renderer/i18n'
-import { initSentry } from '@renderer/init'
 import { useAppDispatch } from '@renderer/store'
 import { setAvatar, setFilesPath, setResourcesPath, setUpdateState } from '@renderer/store/runtime'
 import { delay, runAsyncFunction } from '@renderer/utils'
@@ -92,20 +91,20 @@ export function useAppInit() {
   }, [])
 
   useEffect(() => {
-    const oldCustomCss = document.getElementById('user-defined-custom-css')
-    if (oldCustomCss) {
-      oldCustomCss.remove()
+    let customCssElement = document.getElementById('user-defined-custom-css') as HTMLStyleElement
+    if (customCssElement) {
+      customCssElement.remove()
     }
 
     if (customCss) {
-      const style = document.createElement('style')
-      style.id = 'user-defined-custom-css'
-      style.textContent = customCss
-      document.head.appendChild(style)
+      customCssElement = document.createElement('style')
+      customCssElement.id = 'user-defined-custom-css'
+      customCssElement.textContent = customCss
+      document.head.appendChild(customCssElement)
     }
   }, [customCss])
 
   useEffect(() => {
-    enableDataCollection && initSentry()
+    // TODO: init data collection
   }, [enableDataCollection])
 }
